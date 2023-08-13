@@ -1,12 +1,10 @@
 import { DateTime } from 'luxon'; // Import the necessary date library
-
-const API_KEY = process.env.API_KEY;
-const BASE_URL="https://api.openweathermap.org/data/2.5";
+const API_KEY = process.env.REACT_APP_API_KEY;
+const BASE_URL = process.env.REACT_APP_API_URL;
 
 const getWeatherData = async (infoType, searchParams) => {
     const url = new URL(`${BASE_URL}/${infoType}`);
     url.search = new URLSearchParams({ ...searchParams, appid: API_KEY });
-
     const response = await fetch(url);
     const data = await response.json();
     return data;
@@ -47,7 +45,7 @@ const formatCurrentWeather = (data) => {
 
 const formatForecastWeather = (data) => {
     let { timezone, daily, hourly } = data;
-    daily= daily.slice(1, 6).map((d) => {
+    daily = daily.slice(1, 6).map((d) => {
         return {
             title: formatToLocalTime(d.dt, timezone, 'ccc'),
             temp: d.temp.day,
@@ -55,7 +53,7 @@ const formatForecastWeather = (data) => {
         };
     });
 
-    hourly= hourly.slice(1, 6).map((d) => {
+    hourly = hourly.slice(1, 6).map((d) => {
         return {
             title: formatToLocalTime(d.dt, timezone, 'hh:mm a'),
             temp: d.temp,
@@ -88,9 +86,7 @@ const getFormattedData = async (searchParams) => {
     };
 };
 
-const iconUrlFromCode=(code)=>`https://openweathermap.org/img/wn/${code}@2x.png`;
-    
-
+const iconUrlFromCode = (code) => `https://openweathermap.org/img/wn/${code}@2x.png`;
 
 export default getFormattedData;
-export {formatToLocalTime,iconUrlFromCode};
+export { formatToLocalTime, iconUrlFromCode };

@@ -10,7 +10,7 @@ function TemperatureDetails({weather:{temp, feels_like, details,temp_min,sunrise
                     {details}
                 </p>
         </div>
-        <div className=' flex flex-row items-center justify-between text-white py-3'>
+        <div className=' flex max-sm:flex-col max-sm:space-y-3 flex-row items-center justify-between text-white py-3'>
                 <img src={iconUrlFromCode(icon)}
                 alt="hell"
                 className='w-20'
@@ -37,7 +37,7 @@ function TemperatureDetails({weather:{temp, feels_like, details,temp_min,sunrise
                 </div>
         </div>
     
-    <div className=' flex flex-row items-center justify-center space-x-2 text-white text-sm py-3'>
+    <div className=' flex max-sm:flex-wrap flex-row items-center justify-center space-x-2 space-y-2  text-white text-sm py-3'>
             <UilSun/>
             <p className='font-light '>Rise:
             <span className='font-medium ml-1'>{formatToLocalTime(sunrise,timezone,"hh:mm a")}</span>

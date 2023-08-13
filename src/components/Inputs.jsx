@@ -31,22 +31,23 @@ const handleUnitsChange=(e)=>{
 }
 
   return (
-    <div className='flex flex-row justify-center my-6'>
-      <div className='flex flex-row w-3/4 items-center justify-center space-x-4'>
+    <div className='flex flex-row justify-center my-6 flex max-sm:flex-col max-sm:my-1'>
+      <div className='flex flex-row max-sm:flex-col  sm:w-3/4 items-center justify-center max-sm:space-y-2 sm:space-x-4'>
         <input
         value={city}
-        onChange={(e)=>{setCity(e.currentTarget.value)}}
-          placeholder="......Search"
+          onChange={(e)=>{setCity(e.currentTarget.value)}}
+          placeholder="...city"
+          
           type="text"
-          className='text-xl font-light p-2 w-full shadow-xl focus:outline-none capitalize placeholder:lowercase'
+          className='sm:text-xl font-light max-sm:p-1  sm:p-2  shadow-xl focus:outline-none capitalize placeholder:lowercase'
         />
         <UilSearchAlt size={25} className='text-white cursor-pointer transition ease-out hover:scale-150' onClick={handleSearchClick}/>
         <UilLocationPoint size={25} className='text-white cursor-pointer transition ease-out hover:scale-150'
         onClick={handleLocationClick} />
       </div>
-      <div className='flex flex-row w-1/4 items-center justify-center space-x-1'>
+      <div className='flex flex-row sm:w-1/4 items-center max-sm:space-x-10 justify-center space-x-3'>
         <button className='text-white space-x-1 text-xl hover:scale-125 transition ease-out' name="metric"onClick={handleUnitsChange}>°C</button>
-        <p className='text-white space-x-1 text-xl'>|</p>
+        <p className='text-white space-x-1 max-sm:hidden  text-xl'>|</p>
         <button className='text-white space-x-1 text-xl hover:scale-125 transition ease-out' name="imperial"onClick={handleUnitsChange}>°F</button>
       </div>
     </div>

@@ -15,6 +15,3 @@ Access it here: [Weather Forecast App](https://weatherforecast-1-42dn.onrender.c
 <p align="center">
   <img src="public/preview.png" alt="Weather Forecast App" />
 </p>
-
-
-Let me know if you'd like me to generate or edit a preview image for the app!

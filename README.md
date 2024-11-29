@@ -1,7 +1,3 @@
-Here’s a simplified version of the README with essential information and a placeholder for the app view:  
-
----
-
 # Weather Forecast App  
 
 A responsive weather forecast app to view the current and hourly weather for any city.  

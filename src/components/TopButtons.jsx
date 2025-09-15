@@ -1,37 +1,21 @@
 import React from "react";
+import { motion } from "framer-motion";
 
 function TopButtons({ setQuery }) {
-  const cities = [
-    {
-      id: 1,
-      title: "Delhi",
-    },
-    {
-      id: 2,
-      title: "Mumbai",
-    },
-    {
-      id: 3,
-      title: "Shimla",
-    },
-    {
-      id: 4,
-      title: "Dehradun",
-    },
-  ];
+  const cities = ["Delhi", "Mumbai", "Shimla", "Dehradun", "London"];
 
   return (
-    <div className=" flex max-sm:flex-col  flex-wrap sm:items-center justify-around my-6 ">
+    <div className="flex flex-wrap justify-center sm:justify-around my-6 gap-3">
       {cities.map((city) => (
-        <button
-          className="text-white  text-lg font-medium mx-1"
-          key={city.id}
-          onClick={() => {
-            setQuery({ q: city.title });
-          }}
+        <motion.button
+          key={city}
+          whileHover={{ scale: 1.1, backgroundColor: "rgba(255, 255, 255, 0.3)" }}
+          whileTap={{ scale: 0.95 }}
+          className="bg-black/20 backdrop-blur-sm px-5 py-2 rounded-full text-white font-medium shadow-md transition-colors"
+          onClick={() => setQuery({ q: city })}
         >
-          {city.title}
-        </button>
+          {city}
+        </motion.button>
       ))}
     </div>
   );

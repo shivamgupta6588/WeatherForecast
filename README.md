@@ -32,8 +32,8 @@ Access it here: [Weather Forecast App](https://weatherforecast-1-42dn.onrender.c
 ## Installation
 
 ```bash
-git clone https://github.com/yourusername/weathernow.git
-cd weathernow
+git clone https://github.com/shivamgupta6588/WeatherForecast.git
+cd WeatherForecast
 npm install
 ````
 

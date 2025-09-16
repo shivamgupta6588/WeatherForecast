@@ -30,17 +30,13 @@ function App() {
   useEffect(() => {
     const fetchWeather = async () => {
       if (!query.q && !query.lat) return;
-      
-      const message = query.q ? query.q : "current location...";
-      toast.info(`Fetching weather for ${message}`);
-      
+
       setLoading(true);
       try {
         const data = await getFormattedData({ ...query, units });
-        toast.success(`Successfully fetched weather for ${data.name}, ${data.country}.`);
         setWeather(data);
       } catch (error) {
-        toast.error("City not found or failed to fetch weather data.");
+        toast.error("City not found or failed to fetch weather data."); // Only show toast on error
         setWeather(null); // Clear weather data on error
       } finally {
         setLoading(false);
@@ -52,14 +48,14 @@ function App() {
 
   const formatBackground = () => {
     if (!weather) return "from-gray-800 to-gray-900"; // Neutral background
-    
+
     const details = weather.details.toLowerCase();
-    
+
     if (details.includes("rain") || details.includes("drizzle")) return "from-slate-600 to-slate-800";
     if (details.includes("smoke") || details.includes("haze") || details.includes("fog")) return "from-gray-500 to-gray-700";
     if (details.includes("clouds")) return "from-sky-700 to-gray-800";
     if (details.includes("clear")) return "from-blue-500 to-cyan-600";
-    
+
     const tempThreshold = units === "metric" ? 25 : 77;
     return weather.temp <= tempThreshold ? "from-cyan-600 to-blue-800" : "from-yellow-600 to-orange-800";
   };
@@ -107,8 +103,8 @@ function App() {
                animate={{ opacity: 1 }}
                className="text-center py-20 text-xl text-yellow-300 font-semibold"
              >
-               <p>Sorry, we couldn't find that city.</p>
-               <p>Please check the spelling and try again!</p>
+              <p>Sorry, we couldn't find that city.</p>
+              <p>Please check the spelling and try again!</p>
              </motion.div>
           )}
         </AnimatePresence>

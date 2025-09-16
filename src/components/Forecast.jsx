@@ -1,124 +1,60 @@
 import React from "react";
-import { Card, CardContent, Typography, Box } from "@mui/material";
-import { Line } from "react-chartjs-2";
-import "chart.js/auto";
-import dayjs from "dayjs";
+import { motion } from "framer-motion";
 
-const Forecast = ({ title, forecast }) => {
-  const groupedItems = forecast.reduce((acc, item) => {
-    const [day, time] = item.title.split(", ");
+function Forecast({ title, forecast }) {
+  if (!Array.isArray(forecast) || forecast.length === 0) {
+    return null;
+  }
+
+  const grouped = forecast.reduce((acc, item) => {
+    const [day] = item.title.split(", ");
     if (!acc[day]) acc[day] = [];
-    acc[day].push({ time, temp: item.temp, icon: item.icon });
+    acc[day].push({ time: item.title.split(", ")[1], temp: item.temp, icon: item.icon });
     return acc;
   }, {});
 
+  const textShadow = { textShadow: '1px 1px 2px rgba(0, 0, 0, 0.2)' };
+
   return (
-    <Box mt={4}>
-      <Typography
-        variant="h4"
-        align="center"
-        gutterBottom
-        sx={{ color: "#fff", fontWeight: "bold", mb: 2 }}
-      >
-        {title}
-      </Typography>
-      {Object.entries(groupedItems).map(([day, dayItems]) => {
-        const labels = dayItems.map((item) => item.time);
-        const temperatures = dayItems.map((item) => item.temp);
+    <section className="w-full md:w-screen md:relative md:left-1/2 md:-translate-x-1/2 bg-black/10 mt-10 shadow-inner">
+      <div className="max-w-screen-xl mx-auto px-4 md:px-8 py-6 text-white">
+        <h2 className="text-3xl font-bold mb-6 text-center" style={textShadow}>{title}</h2>
 
-        const data = {
-          labels,
-          datasets: [
-            {
-              label: "Temperature (°C)",
-              data: temperatures,
-              borderColor: "#ffcc00",
-              backgroundColor: "rgba(255, 204, 0, 0.3)",
-              fill: true,
-              tension: 0.4,
-            },
-          ],
-        };
-
-        return (
-          <Card
-            key={day}
-            sx={{
-              mb: 4,
-              background: "linear-gradient(135deg, #1a237e, #3f51b5)",
-              color: "#fff",
-              borderRadius: "12px",
-              overflow: "hidden",
-              boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.2)",
-            }}
-          >
-            <Typography
-              variant="h6"
-              component="div"
-              sx={{
-                py: 2,
-                textAlign: "center",
-                bgcolor: "#283593",
-                color: "#ffeb3b",
-                fontWeight: "bold",
-              }}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {Object.entries(grouped).map(([day, items], idx) => (
+            <motion.div
+              key={day}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: idx * 0.1 }}
+              className="bg-black/20 backdrop-blur-md rounded-3xl p-5 shadow-lg flex flex-col"
             >
-              {day}
-            </Typography>
-            <CardContent sx={{ py: 4 }}>
-              <Box mb={4}>
-                <Line
-                  data={data}
-                  options={{ responsive: true, maintainAspectRatio: false }}
-                />
-              </Box>
-              <Box
-                display="grid"
-                gridTemplateColumns="repeat(auto-fill, minmax(100px, 1fr))"
-                gap={2}
-                justifyContent="center"
-                alignItems="center"
-                sx={{ mt: 2 }}
-              >
-                {dayItems.map((item, index) => (
-                  <Box
-                    key={index}
-                    sx={{
-                      textAlign: "center",
-                      p: 1,
-                      bgcolor: "#1e88e5",
-                      borderRadius: "8px",
-                      boxShadow: "0px 3px 6px rgba(0, 0, 0, 0.2)",
-                      color: "#fff",
-                    }}
+              <h3 className="font-semibold mb-4 text-xl text-cyan-200">{day}</h3>
+
+              {/* Removed horizontal scroll and changed to a grid layout for hourly items */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                {items.map((item, itemIdx) => (
+                  <motion.div
+                    key={itemIdx}
+                    whileHover={{ scale: 1.05, backgroundColor: "rgba(255, 255, 255, 0.2)" }}
+                    className="flex flex-col items-center justify-between min-w-[90px] bg-white/10 rounded-2xl p-3 shadow-md cursor-pointer"
                   >
+                    <p className="text-white/90 text-sm">{item.time}</p>
                     <img
                       src={`https://openweathermap.org/img/wn/${item.icon}@2x.png`}
                       alt="weather icon"
-                      style={{
-                        width: "50px",
-                        height: "50px",
-                        marginBottom: "8px",
-                      }}
+                      className="w-16 h-16"
                     />
-                    <Typography
-                      variant="h6"
-                      sx={{ color: "#ffeb3b", fontWeight: "bold" }}
-                    >
-                      {item.temp}°C
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: "#bbdefb" }}>
-                      {item.time}
-                    </Typography>
-                  </Box>
+                    <p className="font-bold text-xl">{`${item.temp.toFixed()}°`}</p>
+                  </motion.div>
                 ))}
-              </Box>
-            </CardContent>
-          </Card>
-        );
-      })}
-    </Box>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
   );
-};
+}
 
 export default Forecast;

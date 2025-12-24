@@ -3,23 +3,12 @@ import { DateTime } from "luxon";
 const API_KEY = process.env.REACT_APP_API_KEY;
 const BASE_URL = process.env.REACT_APP_API_URL;
 
-// In-memory cache with optional TTL (default 10 mins)
+// Simple in-memory cache to prevent repeated API calls for same params
 const cache = {};
-const CACHE_TTL = 10 * 60 * 1000;
 
-/**
- * Fetch weather data from OpenWeather API with caching
- * @param {string} infoType - "weather" or "forecast"
- * @param {object} searchParams - API query params
- * @returns {Promise<object>} Weather data
- */
 const getWeatherData = async (infoType, searchParams) => {
   const key = `${infoType}-${JSON.stringify(searchParams)}`;
-  const now = Date.now();
-
-  if (cache[key] && now - cache[key].timestamp < CACHE_TTL) {
-    return cache[key].data;
-  }
+  if (cache[key]) return cache[key];
 
   const url = new URL(`${BASE_URL}/${infoType}`);
   url.search = new URLSearchParams({ ...searchParams, appid: API_KEY });
@@ -37,7 +26,7 @@ const getWeatherData = async (infoType, searchParams) => {
       throw new Error(errorMessage);
     }
     const data = await response.json();
-    cache[key] = { data, timestamp: now };
+    cache[key] = data;
     return data;
   } catch (error) {
     console.error(`Failed to fetch data for ${infoType}:`, error);
@@ -155,6 +144,7 @@ const getFormattedData = async (searchParams) => {
 
     return { ...formattedCurrentWeather, forecast: formattedForecast };
   } catch (err) {
+    console.error("Failed to fetch formatted weather data:", err);
     throw err;
   }
 };

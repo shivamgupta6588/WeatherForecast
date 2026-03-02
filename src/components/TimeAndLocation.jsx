@@ -7,10 +7,11 @@ function TimeAndLocation({ weather: { dt, timezone, name, country } }) {
 
   return (
     <div className="text-center my-6">
-      <p className="text-white/80 text-lg sm:text-xl font-light" style={textShadow}>
+      <p className="text-white/70 text-base sm:text-lg font-light tracking-wider uppercase" style={textShadow}>
         {localTime}
       </p>
-      <p className="text-4xl sm:text-5xl font-extrabold text-white mt-2" style={textShadow}>
+      <p className="text-4xl sm:text-5xl font-extrabold text-white mt-2 flex items-center justify-center gap-2" style={textShadow}>
+        <span>📍</span>
         {`${name}, ${country}`}
       </p>
     </div>

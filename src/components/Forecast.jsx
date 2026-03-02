@@ -16,36 +16,50 @@ function Forecast({ title, forecast }) {
   const textShadow = { textShadow: '1px 1px 2px rgba(0, 0, 0, 0.2)' };
 
   return (
-    <section className="w-full md:w-screen md:relative md:left-1/2 md:-translate-x-1/2 bg-black/10 mt-10 shadow-inner">
-      <div className="max-w-screen-xl mx-auto px-4 md:px-8 py-6 text-white">
-        <h2 className="text-3xl font-bold mb-6 text-center" style={textShadow}>{title}</h2>
+    <section className="w-full mt-10">
+      <div className="py-6 text-white">
+        <h2 className="text-2xl font-bold mb-5 text-center tracking-wide uppercase opacity-80" style={textShadow}>
+          {title}
+        </h2>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="flex flex-col gap-5">
           {Object.entries(grouped).map(([day, items], idx) => (
             <motion.div
               key={day}
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: idx * 0.1 }}
-              className="bg-black/20 backdrop-blur-md rounded-3xl p-5 shadow-lg flex flex-col"
+              transition={{ duration: 0.4, delay: idx * 0.08 }}
+              className="bg-white/10 backdrop-blur-md rounded-3xl p-4 shadow-lg"
             >
-              <h3 className="font-semibold mb-4 text-xl text-cyan-200">{day}</h3>
+              {/* Day header with summary */}
+              <div className="flex items-center justify-between mb-3 px-1">
+                <h3 className="font-bold text-lg text-cyan-200">{day}</h3>
+                <span className="text-sm opacity-70">
+                  {items.length > 0 && (() => {
+                    const { min, max } = items.reduce(
+                      (acc, i) => ({ min: Math.min(acc.min, i.temp), max: Math.max(acc.max, i.temp) }),
+                      { min: Infinity, max: -Infinity }
+                    );
+                    return `${Math.round(min)}° – ${Math.round(max)}°`;
+                  })()}
+                </span>
+              </div>
 
-              {/* Removed horizontal scroll and changed to a grid layout for hourly items */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {/* Horizontal scrollable hourly strip */}
+              <div className="flex gap-3 overflow-x-auto pb-1 scrollbar-hide">
                 {items.map((item, itemIdx) => (
                   <motion.div
                     key={itemIdx}
-                    whileHover={{ scale: 1.05, backgroundColor: "rgba(255, 255, 255, 0.2)" }}
-                    className="flex flex-col items-center justify-between min-w-[90px] bg-white/10 rounded-2xl p-3 shadow-md cursor-pointer"
+                    whileHover={{ scale: 1.07, backgroundColor: "rgba(255, 255, 255, 0.25)" }}
+                    className="flex flex-col items-center justify-between flex-shrink-0 w-[80px] bg-white/10 rounded-2xl py-3 px-2 shadow cursor-pointer transition-colors"
                   >
-                    <p className="text-white/90 text-sm">{item.time}</p>
+                    <p className="text-white/80 text-xs font-medium">{item.time}</p>
                     <img
                       src={`https://openweathermap.org/img/wn/${item.icon}@2x.png`}
                       alt="weather icon"
-                      className="w-16 h-16"
+                      className="w-12 h-12"
                     />
-                    <p className="font-bold text-xl">{`${item.temp.toFixed()}°`}</p>
+                    <p className="font-bold text-lg">{`${item.temp.toFixed()}°`}</p>
                   </motion.div>
                 ))}
               </div>

@@ -37,7 +37,7 @@ function TemperatureDetails({
   };
 
   const textShadow = { textShadow: '2px 2px 4px rgba(0, 0, 0, 0.3)' };
-  const visibilityKm = visibility ? (visibility / 1000).toFixed(1) : "N/A";
+  const visibilityKm = visibility == null ? "N/A" : (visibility / 1000).toFixed(1);
 
   return (
     <div className="my-3 space-y-4">
@@ -74,7 +74,7 @@ function TemperatureDetails({
           </div>
           <div className="flex font-light text-base items-center">
             <UilEye size={20} className="mr-2 opacity-80" />
-            Visibility: <span className="font-semibold ml-1">{`${visibilityKm} km`}</span>
+          Visibility: <span className="font-semibold ml-1">{visibilityKm === "N/A" ? "N/A" : `${visibilityKm} km`}</span>
           </div>
           <div className="flex font-light text-base items-center">
             <UilCloud size={20} className="mr-2 opacity-80" />

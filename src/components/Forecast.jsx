@@ -9,7 +9,8 @@ function Forecast({ title, forecast }) {
   const grouped = forecast.reduce((acc, item) => {
     const [day] = item.title.split(", ");
     if (!acc[day]) acc[day] = [];
-    acc[day].push({ time: item.title.split(", ")[1], temp: item.temp, icon: item.icon });
+    const parts = item.title.split(" | ");
+    acc[day].push({ time: parts[1] ?? parts[0], temp: item.temp, icon: item.icon });
     return acc;
   }, {});
 

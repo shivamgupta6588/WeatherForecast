@@ -7,6 +7,8 @@ import {
   UilWind,
   UilSun,
   UilSunset,
+  UilEye,
+  UilCloud,
 } from "@iconscout/react-unicons";
 import { formatToLocalTime, iconUrlFromCode } from "../Services/weatherService";
 
@@ -15,6 +17,7 @@ function TemperatureDetails({
     temp,
     feels_like,
     details,
+    description,
     temp_min,
     temp_max,
     sunrise,
@@ -23,9 +26,10 @@ function TemperatureDetails({
     icon,
     humidity,
     wind_speed,
+    visibility,
+    cloudiness,
   },
 }) {
-  // Card color remains dynamic based on temperature
   const getCardColor = () => {
     if (temp <= 15) return "from-cyan-600 to-blue-700";
     if (temp >= 30) return "from-orange-500 to-red-600";
@@ -33,61 +37,70 @@ function TemperatureDetails({
   };
 
   const textShadow = { textShadow: '2px 2px 4px rgba(0, 0, 0, 0.3)' };
+  const visibilityKm = visibility == null ? "N/A" : (visibility / 1000).toFixed(1);
 
   return (
-    <div className="my-3">
-      {/* Weather description */}
-      <div className="flex items-center justify-center py-6 text-xl text-cyan-200 font-semibold" style={textShadow}>
-        {details}
+    <div className="my-3 space-y-4">
+      {/* Weather description badge */}
+      <div className="flex items-center justify-center gap-3">
+        <span className="bg-white/20 backdrop-blur-sm px-5 py-1.5 rounded-full text-lg text-white font-semibold capitalize shadow" style={textShadow}>
+          {description || details}
+        </span>
       </div>
 
-      {/* Main temperature and weather details */}
+      {/* Main temperature card */}
       <div
         className={`bg-gradient-to-br ${getCardColor()} rounded-3xl p-6 shadow-xl backdrop-blur-md flex flex-col sm:flex-row items-center justify-around text-white space-y-6 sm:space-y-0`}
       >
-        <div className="flex flex-col items-center">
-          <img src={iconUrlFromCode(icon)} alt="Weather Icon" className="w-24 h-24" />
+        <div className="flex flex-col items-center gap-1">
+          <img src={iconUrlFromCode(icon)} alt="Weather Icon" className="w-28 h-28 drop-shadow-lg" />
+          <p className="text-sm font-light opacity-80">{details}</p>
         </div>
-        
-        <p className="text-6xl font-bold" style={textShadow}>{`${temp.toFixed()}°`}</p>
+
+        <p className="text-7xl font-extrabold tracking-tight" style={textShadow}>{`${temp.toFixed()}°`}</p>
 
         <div className="flex flex-col space-y-3 items-start">
           <div className="flex font-light text-base items-center">
-            <UilTemperature size={20} className="mr-2" />
+            <UilTemperature size={20} className="mr-2 opacity-80" />
             Feels Like: <span className="font-semibold ml-1">{`${feels_like.toFixed()}°`}</span>
           </div>
           <div className="flex font-light text-base items-center">
-            <UilTear size={20} className="mr-2" />
+            <UilTear size={20} className="mr-2 opacity-80" />
             Humidity: <span className="font-semibold ml-1">{`${humidity.toFixed()}%`}</span>
           </div>
           <div className="flex font-light text-base items-center">
-            <UilWind size={20} className="mr-2" />
+            <UilWind size={20} className="mr-2 opacity-80" />
             Wind: <span className="font-semibold ml-1">{`${wind_speed.toFixed()} km/h`}</span>
+          </div>
+          <div className="flex font-light text-base items-center">
+            <UilEye size={20} className="mr-2 opacity-80" />
+          Visibility: <span className="font-semibold ml-1">{visibilityKm === "N/A" ? "N/A" : `${visibilityKm} km`}</span>
+          </div>
+          <div className="flex font-light text-base items-center">
+            <UilCloud size={20} className="mr-2 opacity-80" />
+            Cloudiness: <span className="font-semibold ml-1">{`${cloudiness}%`}</span>
           </div>
         </div>
       </div>
 
       {/* Sunrise, sunset, high and low */}
-      <div className="flex flex-wrap items-center justify-center sm:justify-around space-x-4 space-y-2 text-white text-base py-4 mt-4 bg-black/20 backdrop-blur-sm rounded-full shadow-lg" style={textShadow}>
-        <div className="flex items-center space-x-2">
-          <UilSun />
-          <p>Rise: <span>{formatToLocalTime(sunrise, timezone, "hh:mm a")}</span></p>
-        </div>
-        
-        <div className="flex items-center space-x-2">
-          <UilSunset />
-          <p>Set: <span>{formatToLocalTime(sunset, timezone, "hh:mm a")}</span></p>
-        </div>
-        
-        <div className="flex items-center space-x-2">
-          <UilArrowUp />
-          <p>High: <span>{`${temp_max.toFixed()}°`}</span></p>
-        </div>
-        
-        <div className="flex items-center space-x-2">
-          <UilArrowDown />
-          <p>Low: <span>{`${temp_min.toFixed()}°`}</span></p>
-        </div>
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        {[
+          { icon: <UilSun size={22} />, label: "Sunrise", value: formatToLocalTime(sunrise, timezone, "hh:mm a") },
+          { icon: <UilSunset size={22} />, label: "Sunset", value: formatToLocalTime(sunset, timezone, "hh:mm a") },
+          { icon: <UilArrowUp size={22} />, label: "High", value: `${temp_max.toFixed()}°` },
+          { icon: <UilArrowDown size={22} />, label: "Low", value: `${temp_min.toFixed()}°` },
+        ].map(({ icon: iconEl, label, value }) => (
+          <div
+            key={label}
+            className="flex flex-col items-center justify-center bg-black/20 backdrop-blur-sm rounded-2xl py-3 px-4 shadow text-white gap-1"
+            style={textShadow}
+          >
+            <div className="text-cyan-300">{iconEl}</div>
+            <p className="text-xs uppercase tracking-wide opacity-70">{label}</p>
+            <p className="font-semibold text-base">{value}</p>
+          </div>
+        ))}
       </div>
     </div>
   );
